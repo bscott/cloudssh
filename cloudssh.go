@@ -25,11 +25,19 @@ func main() {
 			fmt.Println("Listing EC2 Instances...")
 			//var instIds []string
 			filter := ec2.NewFilter()
-			instances, err := e.DescribeInstances(nil, filter)
+			resp, err := e.DescribeInstances(nil, filter)
 			if err != nil {
 				panic(err)
 			}
-			fmt.Printf("%#v", instances)
+      for _, instance := range resp.Reservations {
+        for _, reservation := range instance.Instances { 
+          fmt.Printf("Instance ID: %s\n", reservation.InstanceId)
+          fmt.Printf("IP Address: %s\n", reservation.IPAddress)
+          fmt.Printf("State: %v\n", reservation.State)
+          fmt.Printf("keyPair: %s\n", reservation.KeyName)
+        } 
+      }
+			//fmt.Printf("%#v", resp)
 		},
 	}
 
