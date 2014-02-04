@@ -29,14 +29,14 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-      for _, instance := range resp.Reservations {
-        for _, reservation := range instance.Instances { 
-          fmt.Printf("Instance ID: %s\n", reservation.InstanceId)
-          fmt.Printf("IP Address: %s\n", reservation.IPAddress)
-          fmt.Printf("State: %v\n", reservation.State)
-          fmt.Printf("keyPair: %s\n", reservation.KeyName)
-        } 
-      }
+			for _, instance := range resp.Reservations {
+				for _, reservation := range instance.Instances {
+					fmt.Printf("Instance ID: %s\n", reservation.InstanceId)
+					fmt.Printf("IP Address: %s\n", reservation.IPAddress)
+					fmt.Printf("State: %v\n", reservation.State)
+					fmt.Printf("keyPair: %s\n", reservation.KeyName)
+				}
+			}
 			//fmt.Printf("%#v", resp)
 		},
 	}
