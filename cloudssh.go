@@ -5,6 +5,7 @@ import (
 	"github.com/hailocab/goamz/aws"
 	"github.com/hailocab/goamz/ec2"
 	"github.com/spf13/cobra"
+	"github.com/stevedomin/termtable"
 )
 
 func main() {
@@ -22,24 +23,19 @@ func main() {
 		Short: "cloudssh lists cloud instances and allows you to ssh the target node",
 		Long:  "cloudssh lists cloud instances and allows you to ssh the target node",
 		Run: func(c *cobra.Command, arg []string) {
-			fmt.Println("Listing EC2 Instances...")
-			//var instIds []string
 			filter := ec2.NewFilter()
 			resp, err := e.DescribeInstances(nil, filter)
 			if err != nil {
 				panic(err)
 			}
+			t := termtable.NewTable(nil, nil)
+			t.SetHeader([]string{"Instance ID", "IP Address", "DNS Name", "State", "Key Pair"})
 			for _, instance := range resp.Reservations {
 				for _, reservation := range instance.Instances {
-					fmt.Printf("Instance ID: %s\n", reservation.InstanceId)
-					fmt.Printf("IP Address: %s\n", reservation.IPAddress)
-					fmt.Printf("DNS Name: %s\n", reservation.DNSName)
-					fmt.Printf("State: %v\n", reservation.State.Name)
-					fmt.Printf("Key Pair: %s\n", reservation.KeyName)
-					fmt.Printf("Tag Name: %s\n", reservation.Tags)
+					t.AddRow([]string{reservation.InstanceId, reservation.IPAddress, reservation.DNSName, reservation.State.Name, reservation.KeyName})
 				}
 			}
-			//fmt.Printf("%#v", resp)
+			fmt.Println(t.Render())
 		},
 	}
 
