@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	
 	"github.com/hailocab/goamz/aws"
 	"github.com/hailocab/goamz/ec2"
 	"github.com/spf13/cobra"
@@ -15,7 +16,6 @@ func main() {
 		fmt.Println(err)
 		// panic(err.String())
 	}
-
 	e := ec2.New(auth, aws.USEast)
 
 	var cloudsshCmd = &cobra.Command{
