@@ -1,13 +1,22 @@
+// CloudSSH - SSH for the rest of us!
+// Lists instances in from the cloud provider of your choosing
+// Author:: Brian L. Scott
+
 package main
 
 import (
 	"fmt"
-	
 	"github.com/hailocab/goamz/aws"
 	"github.com/hailocab/goamz/ec2"
 	"github.com/spf13/cobra"
 	"github.com/stevedomin/termtable"
+	"strconv"
 )
+
+// Returns incremented counter
+func increaseInt() string {
+	return "true"
+}
 
 func main() {
 
@@ -16,7 +25,7 @@ func main() {
 		fmt.Println(err)
 		// panic(err.String())
 	}
-	e := ec2.New(auth, aws.USEast)
+	e := ec2.New(auth, aws.USWest2)
 
 	var cloudsshCmd = &cobra.Command{
 		Use:   "ec2",
@@ -25,14 +34,25 @@ func main() {
 		Run: func(c *cobra.Command, arg []string) {
 			filter := ec2.NewFilter()
 			resp, err := e.DescribeInstances(nil, filter)
+			// Check if DescribeInstances returned an error.
 			if err != nil {
 				panic(err)
 			}
 			t := termtable.NewTable(nil, nil)
-			t.SetHeader([]string{"Instance ID", "IP Address", "DNS Name", "State", "Key Pair"})
+			t.SetHeader([]string{"Index", "Instance ID", "IP Address", "DNS Name", "State", "Key Pair"})
 			for _, instance := range resp.Reservations {
 				for _, reservation := range instance.Instances {
-					t.AddRow([]string{reservation.InstanceId, reservation.IPAddress, reservation.DNSName, reservation.State.Name, reservation.KeyName})
+					total := strconv.Itoa(0)
+					newval, _ := strconv.Atoi(total)
+					// Check if int conversion failed
+					if err != nil {
+						panic(err)
+					}
+					newval += 1
+					newtotal := strconv.Itoa(newval)
+					t.AddRow([]string{newtotal, reservation.InstanceId, reservation.IPAddress, reservation.DNSName, reservation.State.Name, reservation.KeyName})
+					nt, _ := strconv.Atoi(newtotal)
+					total = strconv.Itoa(nt)
 				}
 			}
 			fmt.Println(t.Render())
