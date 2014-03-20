@@ -41,14 +41,14 @@ func main() {
 			t := termtable.NewTable(nil, nil)
 			t.SetHeader([]string{"Index", "Instance ID", "IP Address", "DNS Name", "State", "Key Pair"})
 			for _, instance := range resp.Reservations {
+				total := strconv.Itoa(0)
 				for _, reservation := range instance.Instances {
-					total := strconv.Itoa(0)
 					newval, _ := strconv.Atoi(total)
 					// Check if int conversion failed
 					if err != nil {
 						panic(err)
 					}
-					newval += 1
+					newval++
 					newtotal := strconv.Itoa(newval)
 					t.AddRow([]string{newtotal, reservation.InstanceId, reservation.IPAddress, reservation.DNSName, reservation.State.Name, reservation.KeyName})
 					nt, _ := strconv.Atoi(newtotal)

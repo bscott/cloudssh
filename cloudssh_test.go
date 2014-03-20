@@ -1,15 +1,19 @@
 package main
 
-import(
-.	"github.com/onsi/ginkgo"
-.	"github.com/onsi/gomega"
+import (
+	. "github.com/franela/goblin"
+	. "github.com/onsi/gomega"
 	"testing"
 )
 
-
 func TestCloudSSH(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "CloudSSH Suite")
+	g := Goblin(t)
+
+	//special hook for gomega
+	RegisterFailHandler(func(m string, _ ...int) { g.Fail(m) })
+	g.Describe("Numbers Test", func() {
+		g.It("Should add two numbers ", func() {
+			g.Assert(1 + 1).Equal(2)
+		})
+	})
 }
-
-
